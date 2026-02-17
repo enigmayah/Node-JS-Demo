@@ -1,21 +1,26 @@
+require('dotenv').config();
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
-
+const helmet = require("helmet");
 
 const app = express();
 
+// Use Helmet for secure headers
+app.use(helmet());
+
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/",(req,res)=>{
-    // res.send("hello world"); to send text
-       res.sendFile(path.join(__dirname+"/index.html"));
-
-
+    res.sendFile(path.join(__dirname, "index.html"));
 });
+
 app.post("/formsubmit",(req,res)=>{
-    res.send("<h1>post method submitted</h1>");
-
+    // In a real app, we would process req.body.name and req.body.pass securely
+    res.send("<h1>Form submitted successfully</h1>");
 });
 
-app.listen(443,()=>{
-    console.log("Server is Listening........");
+const port = process.env.PORT || 3000;
+app.listen(port,()=>{
+    console.log(`Server is Listening on port ${port}........`);
 });
